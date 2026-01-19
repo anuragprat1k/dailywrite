@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useAutoSave } from '@/lib/hooks/useAutoSave'
@@ -16,14 +16,14 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
   const router = useRouter()
   const [content, setContent] = useState(chapter.content)
   const [title, setTitle] = useState(chapter.title)
-  const [initialWordCount] = useState(chapter.word_count)
+  const lastSavedWordCountRef = useRef(chapter.word_count)
 
   const wordCount = countWords(content)
 
   const saveContent = useCallback(async (data: string) => {
     const supabase = createClient()
     const newWordCount = countWords(data)
-    const wordsWrittenToday = Math.max(0, newWordCount - initialWordCount)
+    const wordsDelta = Math.max(0, newWordCount - lastSavedWordCountRef.current)
 
     // Update chapter
     await supabase
@@ -41,8 +41,8 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
       .update({ updated_at: new Date().toISOString() })
       .eq('id', projectId)
 
-    // Update writing session for today
-    if (wordsWrittenToday > 0) {
+    // Update writing session for today (only add new words since last save)
+    if (wordsDelta > 0) {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         const today = new Date().toISOString().split('T')[0]
@@ -58,7 +58,7 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
           const session = existing as { id: string; words_written: number }
           await supabase
             .from('writing_sessions')
-            .update({ words_written: session.words_written + wordsWrittenToday })
+            .update({ words_written: session.words_written + wordsDelta })
             .eq('id', session.id)
         } else {
           await supabase
@@ -66,12 +66,15 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
             .insert({
               user_id: user.id,
               date: today,
-              words_written: wordsWrittenToday,
+              words_written: wordsDelta,
             })
         }
       }
     }
-  }, [chapter.id, projectId, initialWordCount])
+
+    // Update the ref after successful save
+    lastSavedWordCountRef.current = newWordCount
+  }, [chapter.id, projectId])
 
   const { isSaving, lastSaved, saveNow } = useAutoSave({
     data: content,
