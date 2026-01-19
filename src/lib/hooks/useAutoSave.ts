@@ -19,21 +19,32 @@ export function useAutoSave({
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const lastSavedDataRef = useRef<string>(data)
+  const currentDataRef = useRef<string>(data)
+  const onSaveRef = useRef(onSave)
+
+  // Keep refs up to date
+  useEffect(() => {
+    currentDataRef.current = data
+  }, [data])
+
+  useEffect(() => {
+    onSaveRef.current = onSave
+  }, [onSave])
 
   const save = useCallback(async () => {
-    if (data === lastSavedDataRef.current) return
+    if (currentDataRef.current === lastSavedDataRef.current) return
 
     setIsSaving(true)
     try {
-      await onSave(data)
-      lastSavedDataRef.current = data
+      await onSaveRef.current(currentDataRef.current)
+      lastSavedDataRef.current = currentDataRef.current
       setLastSaved(new Date())
     } catch (error) {
       console.error('Auto-save failed:', error)
     } finally {
       setIsSaving(false)
     }
-  }, [data, onSave])
+  }, [])
 
   // Debounced auto-save
   useEffect(() => {
@@ -57,11 +68,11 @@ export function useAutoSave({
   // Save on unmount
   useEffect(() => {
     return () => {
-      if (data !== lastSavedDataRef.current) {
-        onSave(data)
+      if (currentDataRef.current !== lastSavedDataRef.current) {
+        onSaveRef.current(currentDataRef.current)
       }
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])
 
   // Manual save function
   const saveNow = useCallback(async () => {
