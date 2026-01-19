@@ -16,14 +16,20 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
   const router = useRouter()
   const [content, setContent] = useState(chapter.content)
   const [title, setTitle] = useState(chapter.title)
-  const lastSavedWordCountRef = useRef(chapter.word_count)
+
+  // Track the initial word count when editor opened and the highest count credited this session
+  const initialWordCountRef = useRef(chapter.word_count)
+  const creditedWordCountRef = useRef(chapter.word_count)
 
   const wordCount = countWords(content)
 
   const saveContent = useCallback(async (data: string) => {
     const supabase = createClient()
     const newWordCount = countWords(data)
-    const wordsDelta = Math.max(0, newWordCount - lastSavedWordCountRef.current)
+
+    // Only credit words above the highest previously credited count
+    // This prevents double-counting if user deletes and re-adds words
+    const wordsToCredit = Math.max(0, newWordCount - creditedWordCountRef.current)
 
     // Update chapter
     await supabase
@@ -41,8 +47,8 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
       .update({ updated_at: new Date().toISOString() })
       .eq('id', projectId)
 
-    // Update writing session for today (only add new words since last save)
-    if (wordsDelta > 0) {
+    // Update writing session for today (only credit genuinely new words)
+    if (wordsToCredit > 0) {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         const today = new Date().toISOString().split('T')[0]
@@ -58,7 +64,7 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
           const session = existing as { id: string; words_written: number }
           await supabase
             .from('writing_sessions')
-            .update({ words_written: session.words_written + wordsDelta })
+            .update({ words_written: session.words_written + wordsToCredit })
             .eq('id', session.id)
         } else {
           await supabase
@@ -66,14 +72,14 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
             .insert({
               user_id: user.id,
               date: today,
-              words_written: wordsDelta,
+              words_written: wordsToCredit,
             })
         }
       }
-    }
 
-    // Update the ref after successful save
-    lastSavedWordCountRef.current = newWordCount
+      // Update the high water mark after crediting
+      creditedWordCountRef.current = newWordCount
+    }
   }, [chapter.id, projectId])
 
   const { isSaving, lastSaved, saveNow } = useAutoSave({
