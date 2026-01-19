@@ -17,9 +17,8 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
   const [content, setContent] = useState(chapter.content)
   const [title, setTitle] = useState(chapter.title)
 
-  // Track the initial word count when editor opened and the highest count credited this session
-  const initialWordCountRef = useRef(chapter.word_count)
-  const creditedWordCountRef = useRef(chapter.word_count)
+  // Track the word count from the last save to compute delta
+  const lastSavedWordCountRef = useRef(chapter.word_count)
 
   const wordCount = countWords(content)
 
@@ -27,9 +26,8 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
     const supabase = createClient()
     const newWordCount = countWords(data)
 
-    // Only credit words above the highest previously credited count
-    // This prevents double-counting if user deletes and re-adds words
-    const wordsToCredit = Math.max(0, newWordCount - creditedWordCountRef.current)
+    // Calculate the delta (can be positive or negative)
+    const delta = newWordCount - lastSavedWordCountRef.current
 
     // Update chapter
     await supabase
@@ -47,8 +45,8 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
       .update({ updated_at: new Date().toISOString() })
       .eq('id', projectId)
 
-    // Update writing session for today (only credit genuinely new words)
-    if (wordsToCredit > 0) {
+    // Update writing session for today with the net delta
+    if (delta !== 0) {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         const today = new Date().toISOString().split('T')[0]
@@ -64,22 +62,23 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
           const session = existing as { id: string; words_written: number }
           await supabase
             .from('writing_sessions')
-            .update({ words_written: session.words_written + wordsToCredit })
+            .update({ words_written: Math.max(0, session.words_written + delta) })
             .eq('id', session.id)
-        } else {
+        } else if (delta > 0) {
+          // Only create a new session if we're adding words
           await supabase
             .from('writing_sessions')
             .insert({
               user_id: user.id,
               date: today,
-              words_written: wordsToCredit,
+              words_written: delta,
             })
         }
       }
-
-      // Update the high water mark after crediting
-      creditedWordCountRef.current = newWordCount
     }
+
+    // Update ref after successful save
+    lastSavedWordCountRef.current = newWordCount
   }, [chapter.id, projectId])
 
   const { isSaving, lastSaved, saveNow } = useAutoSave({
