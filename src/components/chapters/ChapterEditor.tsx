@@ -109,10 +109,10 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <header className="border-b border-gray-100 px-4 py-3 flex items-center justify-between sticky top-0 bg-white z-10">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-1 min-w-0">
           <button
             onClick={() => router.push(`/projects/${projectId}`)}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-gray-700 flex-shrink-0"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -123,12 +123,12 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             onBlur={handleTitleBlur}
-            className="text-lg font-medium text-gray-900 bg-transparent border-none outline-none focus:ring-0"
+            className="text-lg font-medium text-gray-900 bg-transparent border-none outline-none focus:ring-0 w-full"
             placeholder="Chapter title..."
           />
         </div>
 
-        <div className="flex items-center gap-4 text-sm text-gray-500">
+        <div className="flex items-center gap-4 text-sm text-gray-500 flex-shrink-0">
           <span>{wordCount.toLocaleString()} words</span>
           <span className="flex items-center gap-1">
             {isSaving ? (
