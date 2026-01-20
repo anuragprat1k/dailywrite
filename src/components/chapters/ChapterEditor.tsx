@@ -10,9 +10,10 @@ import { Chapter } from '@/types/database'
 interface ChapterEditorProps {
   chapter: Chapter
   projectId: string
+  backUrl?: string
 }
 
-export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
+export function ChapterEditor({ chapter, projectId, backUrl }: ChapterEditorProps) {
   const router = useRouter()
   const [content, setContent] = useState(chapter.content)
   const [title, setTitle] = useState(chapter.title)
@@ -116,7 +117,7 @@ export function ChapterEditor({ chapter, projectId }: ChapterEditorProps) {
       <header className="border-b border-gray-100 px-4 py-3 flex items-center justify-between sticky top-0 bg-white z-10">
         <div className="flex items-center gap-4 flex-1 min-w-0">
           <button
-            onClick={() => router.push(`/projects/${projectId}`)}
+            onClick={() => router.push(backUrl || `/projects/${projectId}`)}
             className="text-gray-500 hover:text-gray-700 flex-shrink-0"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
