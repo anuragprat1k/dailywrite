@@ -3,9 +3,12 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Navbar } from '@/components/dashboard/Navbar'
 import { ChapterList } from '@/components/chapters/ChapterList'
+import { SingleDocumentEditor } from '@/components/chapters/SingleDocumentEditor'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { DeleteProjectButton } from '@/components/projects/DeleteProjectButton'
 import { Project, Chapter } from '@/types/database'
+
+const SINGLE_DOCUMENT_TYPES = ['blog', 'essay']
 
 interface ProjectPageProps {
   params: Promise<{ id: string }>
@@ -39,6 +42,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   const chaptersList: Chapter[] = chapters || []
   const totalWords = chaptersList.reduce((sum, c) => sum + c.word_count, 0)
+  const isSingleDocument = SINGLE_DOCUMENT_TYPES.includes(typedProject.type)
+
+  // For single document types (blog/essay), render just the editor
+  if (isSingleDocument) {
+    return (
+      <SingleDocumentEditor
+        projectId={id}
+        existingChapter={chaptersList[0] || null}
+      />
+    )
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
