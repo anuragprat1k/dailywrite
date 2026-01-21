@@ -76,18 +76,21 @@ export interface Database {
           user_id: string
           date: string
           words_written: number
+          time_spent: number
         }
         Insert: {
           id?: string
           user_id: string
           date: string
           words_written?: number
+          time_spent?: number
         }
         Update: {
           id?: string
           user_id?: string
           date?: string
           words_written?: number
+          time_spent?: number
         }
       }
     }

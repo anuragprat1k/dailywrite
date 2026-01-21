@@ -85,6 +85,22 @@ export function getWordsToday(sessions: WritingSession[]): number {
   return todaySession?.words_written ?? 0
 }
 
+export function getTimeToday(sessions: WritingSession[]): number {
+  const today = new Date().toISOString().split('T')[0]
+  const todaySession = sessions.find((s) => s.date === today)
+  return todaySession?.time_spent ?? 0
+}
+
+export function formatTimeDisplay(totalSeconds: number): string {
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`
+  }
+  return `${minutes}m`
+}
+
 export function countWords(text: string): number {
   if (!text || !text.trim()) return 0
   return text.trim().split(/\s+/).length
