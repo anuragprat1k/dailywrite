@@ -33,8 +33,12 @@ CREATE TABLE writing_sessions (
   user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   date date NOT NULL,
   words_written int DEFAULT 0,
+  time_spent int DEFAULT 0, -- Time spent writing in seconds
   UNIQUE(user_id, date)
 );
+
+-- Migration for existing databases:
+-- ALTER TABLE writing_sessions ADD COLUMN IF NOT EXISTS time_spent int DEFAULT 0;
 
 -- Indexes for better query performance
 CREATE INDEX idx_projects_user_id ON projects(user_id);

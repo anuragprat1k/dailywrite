@@ -7,6 +7,7 @@ interface StatsCardsProps {
   longestStreak: number
   totalWords: number
   wordsToday: number
+  timeToday: string
 }
 
 export function StatsCards({
@@ -14,6 +15,7 @@ export function StatsCards({
   longestStreak,
   totalWords,
   wordsToday,
+  timeToday,
 }: StatsCardsProps) {
   const stats = [
     {
@@ -31,23 +33,30 @@ export function StatsCards({
       bgColor: 'bg-purple-50',
     },
     {
-      label: 'Total Words',
-      value: totalWords.toLocaleString(),
-      suffix: 'words',
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
-    },
-    {
       label: 'Words Today',
       value: wordsToday.toLocaleString(),
       suffix: 'words',
       color: 'text-green-600',
       bgColor: 'bg-green-50',
     },
+    {
+      label: 'Time Today',
+      value: timeToday,
+      suffix: 'writing',
+      color: 'text-cyan-600',
+      bgColor: 'bg-cyan-50',
+    },
+    {
+      label: 'Total Words',
+      value: totalWords.toLocaleString(),
+      suffix: 'words',
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50',
+    },
   ]
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
       {stats.map((stat) => (
         <Card key={stat.label} className={stat.bgColor}>
           <CardContent className="py-4">

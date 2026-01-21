@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useAutoSave } from '@/lib/hooks/useAutoSave'
+import { useWritingTimer, formatTime } from '@/lib/hooks/useWritingTimer'
 import { countWords } from '@/lib/utils/stats'
 import { Chapter } from '@/types/database'
 
@@ -22,6 +23,8 @@ export function ChapterEditor({ chapter, projectId, backUrl }: ChapterEditorProp
   const lastSavedWordCountRef = useRef(chapter.word_count)
 
   const wordCount = countWords(content)
+
+  const { elapsedSeconds, isPaused } = useWritingTimer()
 
   const saveContent = useCallback(async (data: string) => {
     const supabase = createClient()
@@ -135,6 +138,13 @@ export function ChapterEditor({ chapter, projectId, backUrl }: ChapterEditorProp
         </div>
 
         <div className="flex items-center gap-4 text-sm text-gray-500 flex-shrink-0">
+          <span className="flex items-center gap-1">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {formatTime(elapsedSeconds)}
+            {isPaused && <span className="text-yellow-500 text-xs">(paused)</span>}
+          </span>
           <span>{wordCount.toLocaleString()} words</span>
           <span className="flex items-center gap-1">
             {isSaving ? (

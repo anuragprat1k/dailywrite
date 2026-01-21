@@ -10,6 +10,8 @@ import {
   calculateLongestStreak,
   getTotalWords,
   getWordsToday,
+  getTimeToday,
+  formatTimeDisplay,
   getLast30DaysData,
 } from '@/lib/utils/stats'
 import { Project, WritingSession } from '@/types/database'
@@ -42,6 +44,7 @@ export default async function DashboardPage() {
   const longestStreak = calculateLongestStreak(writingSessions)
   const totalWords = getTotalWords(writingSessions)
   const wordsToday = getWordsToday(writingSessions)
+  const timeToday = formatTimeDisplay(getTimeToday(writingSessions))
   const chartData = getLast30DaysData(writingSessions)
 
   return (
@@ -62,6 +65,7 @@ export default async function DashboardPage() {
             longestStreak={longestStreak}
             totalWords={totalWords}
             wordsToday={wordsToday}
+            timeToday={timeToday}
           />
 
           <WritingChart data={chartData} />
