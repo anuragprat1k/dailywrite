@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useAutoSave } from '@/lib/hooks/useAutoSave'
 import { useWritingTimer, formatTime } from '@/lib/hooks/useWritingTimer'
-import { countWords } from '@/lib/utils/stats'
+import { countWords, getLocalDateString } from '@/lib/utils/stats'
 import { Chapter } from '@/types/database'
 
 interface ChapterEditorProps {
@@ -53,7 +53,7 @@ export function ChapterEditor({ chapter, projectId, backUrl }: ChapterEditorProp
     if (delta !== 0) {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        const today = new Date().toISOString().split('T')[0]
+        const today = getLocalDateString()
 
         const { data: existing } = await supabase
           .from('writing_sessions')
