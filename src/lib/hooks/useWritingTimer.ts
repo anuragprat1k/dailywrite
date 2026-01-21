@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { getLocalDateString } from '@/lib/utils/stats'
 
 const INACTIVITY_TIMEOUT = 2 * 60 * 1000 // 2 minutes of inactivity
 const SAVE_INTERVAL = 30 * 1000 // Save every 30 seconds
@@ -45,7 +46,7 @@ export function useWritingTimer() {
 
     if (!user) return
 
-    const today = new Date().toISOString().split('T')[0]
+    const today = getLocalDateString()
 
     const { data: existing } = await supabase
       .from('writing_sessions')

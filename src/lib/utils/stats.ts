@@ -1,5 +1,13 @@
 import { WritingSession } from '@/types/database'
 
+// Get local date string in YYYY-MM-DD format
+export function getLocalDateString(date: Date = new Date()): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 export function calculateStreak(sessions: WritingSession[]): number {
   if (sessions.length === 0) return 0
 
@@ -80,13 +88,13 @@ export function getTotalWords(sessions: WritingSession[]): number {
 }
 
 export function getWordsToday(sessions: WritingSession[]): number {
-  const today = new Date().toISOString().split('T')[0]
+  const today = getLocalDateString()
   const todaySession = sessions.find((s) => s.date === today)
   return todaySession?.words_written ?? 0
 }
 
 export function getTimeToday(sessions: WritingSession[]): number {
-  const today = new Date().toISOString().split('T')[0]
+  const today = getLocalDateString()
   const todaySession = sessions.find((s) => s.date === today)
   return todaySession?.time_spent ?? 0
 }
@@ -115,7 +123,7 @@ export function getLast30DaysData(
   for (let i = 29; i >= 0; i--) {
     const date = new Date()
     date.setDate(date.getDate() - i)
-    const dateStr = date.toISOString().split('T')[0]
+    const dateStr = getLocalDateString(date)
     result.push({
       date: dateStr,
       words: sessionMap.get(dateStr) ?? 0,

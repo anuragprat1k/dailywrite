@@ -25,7 +25,7 @@ export function Navbar({ userEmail }: NavbarProps) {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
             <Link href="/dashboard" className="text-xl font-bold text-gray-900">
-              WriteFlow
+              Daily Write
             </Link>
             <div className="hidden md:flex items-center gap-4">
               <Link

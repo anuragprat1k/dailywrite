@@ -7,7 +7,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "WriteFlow - Your Writing Companion",
+  title: "Daily Write - Your Writing Companion",
   description: "A writing app for blogs, novels, and creative projects with statistics and progress tracking.",
 };
 
