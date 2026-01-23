@@ -8,12 +8,19 @@ export function getLocalDateString(date: Date = new Date()): string {
   return `${year}-${month}-${day}`
 }
 
+// Parse a YYYY-MM-DD string as a local date (not UTC)
+// This avoids the timezone shift that occurs with new Date("YYYY-MM-DD")
+export function parseLocalDateString(dateStr: string): Date {
+  const [year, month, day] = dateStr.split('-').map(Number)
+  return new Date(year, month - 1, day)
+}
+
 export function calculateStreak(sessions: WritingSession[]): number {
   if (sessions.length === 0) return 0
 
   // Sort sessions by date descending
   const sorted = [...sessions].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => parseLocalDateString(b.date).getTime() - parseLocalDateString(a.date).getTime()
   )
 
   const today = new Date()
@@ -23,8 +30,7 @@ export function calculateStreak(sessions: WritingSession[]): number {
   yesterday.setDate(yesterday.getDate() - 1)
 
   // Check if most recent session is today or yesterday
-  const mostRecentDate = new Date(sorted[0].date)
-  mostRecentDate.setHours(0, 0, 0, 0)
+  const mostRecentDate = parseLocalDateString(sorted[0].date)
 
   if (mostRecentDate < yesterday) {
     return 0 // Streak is broken
@@ -34,8 +40,7 @@ export function calculateStreak(sessions: WritingSession[]): number {
   let currentDate = mostRecentDate
 
   for (let i = 1; i < sorted.length; i++) {
-    const sessionDate = new Date(sorted[i].date)
-    sessionDate.setHours(0, 0, 0, 0)
+    const sessionDate = parseLocalDateString(sorted[i].date)
 
     const expectedDate = new Date(currentDate)
     expectedDate.setDate(expectedDate.getDate() - 1)
@@ -57,15 +62,15 @@ export function calculateLongestStreak(sessions: WritingSession[]): number {
 
   // Sort sessions by date ascending
   const sorted = [...sessions].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    (a, b) => parseLocalDateString(a.date).getTime() - parseLocalDateString(b.date).getTime()
   )
 
   let longestStreak = 1
   let currentStreak = 1
 
   for (let i = 1; i < sorted.length; i++) {
-    const prevDate = new Date(sorted[i - 1].date)
-    const currDate = new Date(sorted[i].date)
+    const prevDate = parseLocalDateString(sorted[i - 1].date)
+    const currDate = parseLocalDateString(sorted[i].date)
 
     const diffDays = Math.round(
       (currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24)

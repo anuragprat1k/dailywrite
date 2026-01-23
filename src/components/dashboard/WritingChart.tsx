@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { parseLocalDateString } from '@/lib/utils/stats'
 
 interface WritingChartProps {
   data: { date: string; words: number }[]
@@ -18,7 +19,7 @@ interface WritingChartProps {
 export function WritingChart({ data }: WritingChartProps) {
   const formattedData = data.map((item) => ({
     ...item,
-    displayDate: new Date(item.date).toLocaleDateString('en-US', {
+    displayDate: parseLocalDateString(item.date).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
     }),
