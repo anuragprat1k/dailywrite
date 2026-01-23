@@ -79,7 +79,7 @@ export function ChapterList({ projectId, chapters }: ChapterListProps) {
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
           placeholder="New chapter title..."
-          className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none dark:bg-slate-700 dark:border-slate-600 dark:text-gray-100 dark:placeholder-gray-400"
           onKeyDown={(e) => {
             if (e.key === 'Enter') handleCreateChapter()
           }}
@@ -90,7 +90,7 @@ export function ChapterList({ projectId, chapters }: ChapterListProps) {
       </div>
 
       {chapters.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
           No chapters yet. Add your first chapter above.
         </div>
       ) : (
@@ -101,13 +101,13 @@ export function ChapterList({ projectId, chapters }: ChapterListProps) {
               <Link
                 key={chapter.id}
                 href={`/projects/${projectId}/${chapter.id}`}
-                className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all group"
+                className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all group dark:bg-slate-800 dark:border-slate-700 dark:hover:border-slate-600"
               >
                 <div className="flex items-center gap-3">
                   <span className="text-sm text-gray-400 w-6">{index + 1}</span>
                   <div>
-                    <h4 className="font-medium text-gray-900">{chapter.title}</h4>
-                    <p className="text-sm text-gray-500">
+                    <h4 className="font-medium text-gray-900 dark:text-gray-100">{chapter.title}</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {chapter.word_count.toLocaleString()} words
                     </p>
                   </div>
