@@ -93,14 +93,24 @@ export function getTotalWords(sessions: WritingSession[]): number {
 }
 
 export function getWordsToday(sessions: WritingSession[]): number {
-  const today = getLocalDateString()
-  const todaySession = sessions.find((s) => s.date === today)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const todaySession = sessions.find((s) => {
+    const sessionDate = parseLocalDateString(s.date)
+    return sessionDate.getTime() === today.getTime()
+  })
   return todaySession?.words_written ?? 0
 }
 
 export function getTimeToday(sessions: WritingSession[]): number {
-  const today = getLocalDateString()
-  const todaySession = sessions.find((s) => s.date === today)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const todaySession = sessions.find((s) => {
+    const sessionDate = parseLocalDateString(s.date)
+    return sessionDate.getTime() === today.getTime()
+  })
   return todaySession?.time_spent ?? 0
 }
 
@@ -123,15 +133,20 @@ export function getLast30DaysData(
   sessions: WritingSession[]
 ): { date: string; words: number }[] {
   const result: { date: string; words: number }[] = []
-  const sessionMap = new Map(sessions.map((s) => [s.date, s.words_written]))
+
+  // Create a map with normalized date timestamps as keys
+  const sessionMap = new Map(
+    sessions.map((s) => [parseLocalDateString(s.date).getTime(), s.words_written])
+  )
 
   for (let i = 29; i >= 0; i--) {
     const date = new Date()
     date.setDate(date.getDate() - i)
+    date.setHours(0, 0, 0, 0)
     const dateStr = getLocalDateString(date)
     result.push({
       date: dateStr,
-      words: sessionMap.get(dateStr) ?? 0,
+      words: sessionMap.get(date.getTime()) ?? 0,
     })
   }
 
