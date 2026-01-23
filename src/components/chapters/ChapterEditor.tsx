@@ -116,12 +116,12 @@ export function ChapterEditor({ chapter, projectId, backUrl }: ChapterEditorProp
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <header className="border-b border-gray-100 px-4 py-3 flex items-center justify-between sticky top-0 bg-white z-10">
+    <div className="min-h-screen bg-white dark:bg-slate-900 flex flex-col">
+      <header className="border-b border-gray-100 dark:border-slate-700 px-4 py-3 flex items-center justify-between sticky top-0 bg-white dark:bg-slate-900 z-10">
         <div className="flex items-center gap-4 flex-1 min-w-0">
           <button
             onClick={() => router.push(backUrl || `/projects/${projectId}`)}
-            className="text-gray-500 hover:text-gray-700 flex-shrink-0"
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -132,12 +132,12 @@ export function ChapterEditor({ chapter, projectId, backUrl }: ChapterEditorProp
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             onBlur={handleTitleBlur}
-            className="text-lg font-medium text-gray-900 bg-transparent border-none outline-none focus:ring-0 w-full"
+            className="text-lg font-medium text-gray-900 dark:text-gray-100 bg-transparent border-none outline-none focus:ring-0 w-full"
             placeholder="Chapter title..."
           />
         </div>
 
-        <div className="flex items-center gap-4 text-sm text-gray-500 flex-shrink-0">
+        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 flex-shrink-0">
           <span className="flex items-center gap-1">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -166,7 +166,7 @@ export function ChapterEditor({ chapter, projectId, backUrl }: ChapterEditorProp
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full h-full min-h-[calc(100vh-200px)] text-lg leading-relaxed text-gray-800 bg-transparent border-none outline-none resize-none focus:ring-0"
+          className="w-full h-full min-h-[calc(100vh-200px)] text-lg leading-relaxed text-gray-800 dark:text-gray-200 bg-transparent border-none outline-none resize-none focus:ring-0"
           placeholder="Start writing..."
           autoFocus
         />

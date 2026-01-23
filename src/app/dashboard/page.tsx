@@ -48,15 +48,15 @@ export default async function DashboardPage() {
   const chartData = getLast30DaysData(writingSessions)
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       <Navbar userEmail={user?.email} />
 
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ''}!
           </h1>
-          <p className="text-gray-600">Here&apos;s your writing overview.</p>
+          <p className="text-gray-600 dark:text-gray-400">Here&apos;s your writing overview.</p>
         </div>
 
         <div className="space-y-8">
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
             <CardContent>
               {recentProjects.length === 0 ? (
                 <div className="text-center py-8">
-                  <p className="text-gray-500 mb-4">No projects yet. Start writing!</p>
+                  <p className="text-gray-500 dark:text-gray-400 mb-4">No projects yet. Start writing!</p>
                   <Link href="/projects/new">
                     <Button>Create Your First Project</Button>
                   </Link>
@@ -91,18 +91,18 @@ export default async function DashboardPage() {
                     <Link
                       key={project.id}
                       href={`/projects/${project.id}`}
-                      className="block p-4 rounded-lg border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-colors"
+                      className="block p-4 rounded-lg border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-colors dark:border-slate-700 dark:hover:border-slate-600 dark:hover:bg-slate-700/50"
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-medium text-gray-900">{project.title}</h3>
+                          <h3 className="font-medium text-gray-900 dark:text-gray-100">{project.title}</h3>
                           {project.description && (
-                            <p className="text-sm text-gray-500 mt-1 line-clamp-1">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">
                               {project.description}
                             </p>
                           )}
                         </div>
-                        <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">
+                        <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded dark:text-gray-300 dark:bg-slate-700">
                           {project.type}
                         </span>
                       </div>

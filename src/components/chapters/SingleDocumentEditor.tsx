@@ -53,7 +53,7 @@ export function SingleDocumentEditor({ projectId, existingChapter }: SingleDocum
   if (!chapter) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-gray-500">Loading editor...</div>
+        <div className="text-gray-500 dark:text-gray-400">Loading editor...</div>
       </div>
     )
   }

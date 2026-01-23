@@ -55,14 +55,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       <Navbar userEmail={user?.email} />
 
       <main className="container mx-auto px-4 py-8">
         <div className="mb-6">
           <Link
             href="/projects"
-            className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1"
+            className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center gap-1"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -90,24 +90,24 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </CardHeader>
               <CardContent>
                 {typedProject.description && (
-                  <p className="text-gray-600 mb-4">{typedProject.description}</p>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">{typedProject.description}</p>
                 )}
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Type</span>
-                    <span className="capitalize">{typedProject.type}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Type</span>
+                    <span className="capitalize dark:text-gray-200">{typedProject.type}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Chapters</span>
-                    <span>{chaptersList.length}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Chapters</span>
+                    <span className="dark:text-gray-200">{chaptersList.length}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Total Words</span>
-                    <span>{totalWords.toLocaleString()}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Total Words</span>
+                    <span className="dark:text-gray-200">{totalWords.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Created</span>
-                    <span>{new Date(typedProject.created_at).toLocaleDateString()}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Created</span>
+                    <span className="dark:text-gray-200">{new Date(typedProject.created_at).toLocaleDateString()}</span>
                   </div>
                 </div>
               </CardContent>
@@ -115,10 +115,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-red-600">Danger Zone</CardTitle>
+                <CardTitle className="text-red-600 dark:text-red-400">Danger Zone</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                   Deleting this project will remove all chapters and content permanently.
                 </p>
                 <DeleteProjectButton projectId={id} />
