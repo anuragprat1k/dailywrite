@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { parseLocalDateString } from '@/lib/utils/stats'
+import { formatDateForDisplay } from '@/lib/utils/stats'
 import { useTheme } from '@/components/ThemeProvider'
 
 interface WritingChartProps {
@@ -23,10 +23,7 @@ export function WritingChart({ data }: WritingChartProps) {
 
   const formattedData = data.map((item) => ({
     ...item,
-    displayDate: parseLocalDateString(item.date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    }),
+    displayDate: formatDateForDisplay(item.date),
   }))
 
   const gridColor = isDark ? '#334155' : '#e5e7eb'
