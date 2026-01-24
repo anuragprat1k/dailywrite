@@ -15,6 +15,14 @@ export function parseLocalDateString(dateStr: string): Date {
   return new Date(year, month - 1, day)
 }
 
+// Format a YYYY-MM-DD date string for display (e.g., "Jan 24")
+// This avoids timezone issues by not using Date object for formatting
+export function formatDateForDisplay(dateStr: string): string {
+  const [, month, day] = dateStr.split('-').map(Number)
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  return `${monthNames[month - 1]} ${day}`
+}
+
 export function calculateStreak(sessions: WritingSession[]): number {
   if (sessions.length === 0) return 0
 
