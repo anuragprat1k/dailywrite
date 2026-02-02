@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useAutoSave } from '@/lib/hooks/useAutoSave'
@@ -20,7 +20,10 @@ export function ChapterEditor({ chapter, projectId, backUrl }: ChapterEditorProp
   const [title, setTitle] = useState(chapter.title)
 
   // Track the word count from the last save to compute delta
-  const lastSavedWordCountRef = useRef(chapter.word_count)
+  // IMPORTANT: Initialize from actual content, not stored word_count, because
+  // the stored value may be stale or out of sync for older articles
+  const initialWordCount = useMemo(() => countWords(chapter.content), [chapter.content])
+  const lastSavedWordCountRef = useRef(initialWordCount)
 
   const wordCount = countWords(content)
 
@@ -90,6 +93,21 @@ export function ChapterEditor({ chapter, projectId, backUrl }: ChapterEditorProp
     onSave: saveContent,
     delay: 2000,
   })
+
+  // Sync stored word_count with actual content on mount if they differ
+  // This is a background correction that doesn't affect daily stats
+  useEffect(() => {
+    if (chapter.word_count !== initialWordCount) {
+      const syncWordCount = async () => {
+        const supabase = createClient()
+        await supabase
+          .from('chapters')
+          .update({ word_count: initialWordCount })
+          .eq('id', chapter.id)
+      }
+      syncWordCount()
+    }
+  }, [chapter.id, chapter.word_count, initialWordCount])
 
   // Handle Cmd/Ctrl+S
   useEffect(() => {
