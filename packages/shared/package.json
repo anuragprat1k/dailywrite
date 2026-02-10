@@ -1,0 +1,16 @@
+{
+  "name": "@dailywrite/shared",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./stats": "./src/stats.ts",
+    "./constants": "./src/constants.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}
