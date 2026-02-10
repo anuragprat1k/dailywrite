@@ -1,4 +1,4 @@
-import { WritingSession } from '@/types/database'
+import { WritingSession } from './types'
 
 // Get local date string in YYYY-MM-DD format
 export function getLocalDateString(date: Date = new Date()): string {
@@ -135,6 +135,17 @@ export function formatTimeDisplay(totalSeconds: number): string {
 export function countWords(text: string): number {
   if (!text || !text.trim()) return 0
   return text.trim().split(/\s+/).length
+}
+
+export function formatTime(totalSeconds: number): string {
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+  }
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`
 }
 
 export function getLast30DaysData(

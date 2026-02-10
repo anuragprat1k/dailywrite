@@ -2,10 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { getLocalDateString } from '@/lib/utils/stats'
-
-const INACTIVITY_TIMEOUT = 2 * 60 * 1000 // 2 minutes of inactivity
-const SAVE_INTERVAL = 30 * 1000 // Save every 30 seconds
+import { getLocalDateString, INACTIVITY_TIMEOUT, SAVE_INTERVAL } from '@dailywrite/shared'
 
 export function useWritingTimer() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
@@ -177,13 +174,4 @@ export function useWritingTimer() {
   }
 }
 
-export function formatTime(totalSeconds: number): string {
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-
-  if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-  }
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`
-}
+export { formatTime } from '@dailywrite/shared'
